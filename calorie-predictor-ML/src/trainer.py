@@ -1,11 +1,11 @@
-from src.model import LinearRegressionGD
-from src.utils import mean_squared_error
+from .model import LinearRegression
+from .utils import mean_squared_error
 
 class Trainer:
     def __init__(self, x, y):
         self.X = x
         self.y = y
-        self.model = LinearRegressionGD()
+        self.model = LinearRegression()
 
     def train(self, n_iters=1000, lr=0.01):
         self.model.lr = lr
