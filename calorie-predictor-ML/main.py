@@ -1,4 +1,3 @@
-# main.py - run this after creating files with create_calories_repo.py
 from src.data_loader import DataLoader
 from src.preprocess import Preprocessor
 from src.trainer import Trainer
