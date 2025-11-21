@@ -11,8 +11,9 @@ def mean_squared_error(y_true, y_pred):
     return total / n
 
 
-def save_model(model, path):
-    with open(path, 'wb') as f:
+def save_model(model, filename):
+    path = os.path.join("model", filename)
+    with open(path, "wb") as f:
         pickle.dump(model, f)
 
 
