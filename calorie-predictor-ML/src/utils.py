@@ -1,17 +1,21 @@
 import pickle
+import os
 import random
 
 
-def mean_squared_error(y_true, y_pred):
+def mean_squared_error(y_true, y_pred, verbose=False):
     n = len(y_true)
     total = 0.0
     for i in range(n):
-        diff = y_true[i] - y_pred[i]
+        diff = float(y_true[i]) - float(y_pred[i])
         total += diff * diff
+        if verbose:
+            print(f"Actual: {y_true[i]:.3f}, Predicted: {y_pred[i]:.3f}, Error: {diff:.3f}")
     return total / n
 
 
 def save_model(model, filename):
+    os.makedirs("model", exist_ok=True)
     path = os.path.join("model", filename)
     with open(path, "wb") as f:
         pickle.dump(model, f)
@@ -22,40 +26,26 @@ def load_model(path):
         return pickle.load(f)
 
 
-
 def train_test_split(X, y, test_size=0.2, random_seed=None):
-
-    # 1. Set random seed for reproducibility
     if random_seed is not None:
         random.seed(random_seed)
-
-    # 2. Combine X and y to shuffle together
     combined = list(zip(X, y))
-    print("Combined before shuffle:", combined)  # Example output
     random.shuffle(combined)
-    print("Combined after shuffle:", combined)
+    Xs, ys = zip(*combined)
+    Xs = list(Xs)
+    ys = list(ys)
 
-    # 3. Separate X and y again
-    X, y = zip(*combined)
-    X = list(X)
-    y = list(y)
-    print("X after unzip:", X)
-    print("y after unzip:", y)
-
-    # 4. Compute number of test samples
-    n_total = len(X)
+    n_total = len(Xs)
     n_test = int(n_total * test_size)
-    print("Total samples:", n_total, "Test samples:", n_test)
 
-    # 5. Split into train and test
-    X_train = X[:-n_test]  # Everything except last n_test
-    X_test = X[-n_test:]   # Last n_test samples
-    y_train = y[:-n_test]
-    y_test = y[-n_test:]
+    if n_test <= 0:
+        return Xs, [], ys, []
+    if n_test >= n_total:
+        return [], Xs, [], ys
 
-    print("X_train:", X_train)
-    print("y_train:", y_train)
-    print("X_test:", X_test)
-    print("y_test:", y_test)
+    X_train = Xs[:-n_test]
+    X_test = Xs[-n_test:]
+    y_train = ys[:-n_test]
+    y_test = ys[-n_test:]
 
     return X_train, X_test, y_train, y_test
